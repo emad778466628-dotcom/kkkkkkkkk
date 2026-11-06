@@ -1,0 +1,21 @@
+name: Unzip Project
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Extract ZIP File
+        run: |
+          Expand-Archive -Path ./*.zip -DestinationPath ./AppOutput
+
+      - name: Upload Extracted EXE Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Executable-App
+          path: ./AppOutput/
