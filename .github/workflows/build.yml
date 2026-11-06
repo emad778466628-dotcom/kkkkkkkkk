@@ -1,4 +1,4 @@
-name: Unzip Project
+Name: Convert HTML to EXE
 
 on:
   workflow_dispatch:
@@ -10,11 +10,24 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Extract ZIP File
+      - name: Extract ZIP Project
         run: |
-          Expand-Archive -Path ./*.zip -DestinationPath ./AppOutput
+          Expand-Archive -Path ./*.zip -DestinationPath ./ExtractedProject
 
-      - name: Upload Extracted EXE Artifact
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Nativefier
+        run: npm install -g nativefier
+
+      - name: Build EXE from HTML
+        run: |
+          # سيقوم هذا الأمر بتحويل صفحة index.html الموجودة في مشروعك إلى تطبيق ويندوز exe
+          nativefier --name "ProToolsHub" --icon "ExtractedProject/icon.ico" "./ExtractedProject/" "./AppOutput/" --overwrite --tray
+
+      - name: Upload EXE Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Executable-App
